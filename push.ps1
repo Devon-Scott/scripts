@@ -1,6 +1,7 @@
 param (
     [Parameter(Mandatory = $true)]
-    [string]$CommitMessage
+    [string]$CommitMessage,
+    [string]$DetailedMessage
 )
 
 function Run-GitCommand {
@@ -23,6 +24,13 @@ function Run-GitCommand {
 }
 
 Run-GitCommand -Command "git" -Arguments "add", "." -ErrorMessage "Error: git add failed."
-Run-GitCommand -Command "git" -Arguments "commit", "-m", "$CommitMessage" -ErrorMessage "Error: git commit failed."
+
+$commitArgs = @("commit", "-m", $CommitMessage)
+if ($DetailedMessage) {
+    $commitArgs += "-m"
+    $commitArgs += $DetailedMessage
+}
+
+Run-GitCommand -Command "git" -Arguments $commitArgs -ErrorMessage "Error: git commit failed."
 Run-GitCommand -Command "git" -Arguments "pull" -ErrorMessage "Error: git pull failed."
 Run-GitCommand -Command "git" -Arguments "push" -ErrorMessage "Error: git push failed."
