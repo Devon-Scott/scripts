@@ -4,6 +4,11 @@ param (
     [string]$DetailedMessage
 )
 
+if (!(Get-Command git.exe -ErrorAction SilentlyContinue)) {
+    Write-Error "Git is not installed or not on the PATH."
+    exit 1
+}
+
 function Run-GitCommand {
     param (
         [Parameter(Mandatory = $true)]
